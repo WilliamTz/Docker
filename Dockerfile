@@ -1,19 +1,39 @@
-#syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1
 
-# builder installs dependencies and builds the node app
+# 🔧 Etapa 1: Builder - instala dependencias y construye la app
 FROM node:lts-alpine AS builder
 WORKDIR /src
+
+# Instalar dependencias usando caché
 RUN --mount=src=package.json,target=package.json \
     --mount=src=package-lock.json,target=package-lock.json \
     --mount=type=cache,target=/root/.npm \
     npm ci
+
+# Copiar todo y construir
 COPY . .
 RUN --mount=type=cache,target=/root/.npm \
     npm run build
 
-# release creates the runtime image
+# 🧪 Etapa 2: Test - corre las pruebas unitarias
+FROM node:lts-alpine AS test
+WORKDIR /test
+
+# Copiar código fuente y dependencias desde builder
+COPY --from=builder /src ./
+
+# Instalar jest o tus herramientas de testing (si no están ya en devDependencies)
+RUN npm install --only=dev
+
+# Ejecutar pruebas (ajusta el comando si usas otra herramienta)
+CMD ["npm", "test"]
+
+# 🚀 Etapa 3: Release - imagen final para producción
 FROM node:lts-alpine AS release
 WORKDIR /app
-COPY --from=builder /src/build .
+
+# Copiar solo la app construida (sin código fuente, ni tests, ni node_modules innecesarios)
+COPY --from=builder /src/build ./
+
 EXPOSE 3000
 CMD ["node", "."]
