@@ -5,10 +5,7 @@ FROM node:lts-alpine AS builder
 WORKDIR /src
 
 # Instalar dependencias usando caché
-RUN --mount=src=package.json,target=package.json \
-    --mount=src=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci
+RUN npm ci
 
 # Copiar todo y construir
 COPY . .
