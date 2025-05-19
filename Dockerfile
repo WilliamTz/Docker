@@ -16,7 +16,6 @@ COPY --from=builder /src ./
 
 # Instalar herramientas de testing (si ya no están en node_modules)
 # Si usas npm ci arriba, esto puede no ser necesario. Solo si quieres aislar devDependencies.
-RUN npm install
 
 # Ejecutar pruebas (ajusta si usas otra herramienta)
 CMD ["npm", "test"]
