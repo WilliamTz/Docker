@@ -18,7 +18,7 @@ COPY --from=builder /src ./
 # Si usas npm ci arriba, esto puede no ser necesario. Solo si quieres aislar devDependencies.
 
 # Ejecutar pruebas (ajusta si usas otra herramienta)
-CMD ["npm", "test"]
+CMD ["test"]
 
 # 🚀 Etapa 3: Release - imagen final para producción
 FROM node:lts-alpine AS release
