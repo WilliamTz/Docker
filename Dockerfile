@@ -21,11 +21,3 @@ COPY --from=builder /src ./
 CMD ["test"]
 
 # 🚀 Etapa 3: Release - imagen final para producción
-FROM node:lts-alpine AS release
-WORKDIR /app
-
-# Copiar solo la app construida (sin node_modules ni código fuente)
-COPY --from=builder /src/build ./
-
-EXPOSE 3000
-CMD ["node", "."]
