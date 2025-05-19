@@ -1,0 +1,23 @@
+name: Run Unit Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔧 Build and run tests (Docker)
+        run: |
+          docker build --target test -t my-app:test .
+          docker run --rm my-app:test
