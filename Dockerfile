@@ -7,11 +7,6 @@ WORKDIR /src
 # Copiar archivos necesarios para instalar dependencias
 COPY package.json package-lock.json ./
 
-
-# Copiar el resto del código y construir
-COPY . .
-RUN npm run build
-
 # 🧪 Etapa 2: Test - corre las pruebas unitarias
 FROM node:lts-alpine AS test
 WORKDIR /test
