@@ -5,23 +5,47 @@ on:
     branches:
       - main
   pull_request:
+
 jobs:
-  build:
+  validate-build:
+    name: Validar configuración de compilación
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Validar configuración con docker/bake
+        uses: docker/bake-action@v4
+        with:
+          files: |
+            docker-bake.hcl
+          set: |
+            *.platform=linux/amd64
+
+  build:
+    name: Construir y subir imagen Docker
+    runs-on: ubuntu-latest
+    needs: validate-build
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Extract Docker image metadata
+
+      - name: Extraer metadata de imagen Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ vars.DOCKER_USERNAME }}/my-image
-      - name: Log in to Docker Hub
+
+      - name: Login en Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build and push Docker image
+
+      - name: Build y push de imagen Docker
         uses: docker/build-push-action@v6
         with:
           push: ${{ github.event_name != 'pull_request' }}
