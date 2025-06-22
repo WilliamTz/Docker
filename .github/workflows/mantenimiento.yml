@@ -46,4 +46,4 @@ jobs:
         command: cves
 
     - name: Mostrar tipo de mantenimiento
-      run: echo "Mantenimiento tipo: ${{ github.event.inputs.tipo }}"
+      run: echo "Mantenimiento tipo:${{ github.event.inputs.tipo }}"
