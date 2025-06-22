@@ -35,10 +35,10 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
-
     - name: Scan image with Docker Scout
       uses: docker/scout-action@v1
       with:
         image: pepebotella911/my-image:latest
         dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
         dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}
+        command: scan
