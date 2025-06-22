@@ -42,3 +42,7 @@ jobs:
         dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
         dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}
         command: scan
+        summary: true
+        format: json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        write-comment: true
