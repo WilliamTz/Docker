@@ -23,10 +23,15 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Convertir nombre de owner a minúsculas
+      id: vars
+      run: |
+        echo "owner_lc=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_OUTPUT
+
     - name: Build y Push de versión corregida
       run: |
-        docker build -t ghcr.io/${{ github.repository_owner }}/app:${{ github.run_number }} .
-        docker push ghcr.io/${{ github.repository_owner }}/app:${{ github.run_number }}
+        docker build -t ghcr.io/${{ steps.vars.outputs.owner_lc }}/app:${{ github.run_number }} .
+        docker push ghcr.io/${{ steps.vars.outputs.owner_lc }}/app:${{ github.run_number }}
 
     - name: Mostrar tipo de mantenimiento
-      run: echo "Mantenimiento tipo:"${{github.event.inputs.tipo }}"
+      run: echo "Mantenimiento tipo:${{ github.event.inputs.tipo }}"
