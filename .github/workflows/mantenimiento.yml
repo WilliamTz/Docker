@@ -28,4 +28,4 @@ jobs:
         docker push pepebotella911/app:${{ github.run_number }}
 
     - name: Mostrar tipo de mantenimiento
-      run: echo "Mantenimiento tipo: ${{ github.event.inputs.tipo }}"
+      run: echo "Mantenimiento tipo:${{ github.event.inputs.tipo }}"
