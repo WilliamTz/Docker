@@ -19,7 +19,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: williamtz/docker-app
+        images: pepebotella911/my-image
 
     - name: Login to DockerHub
       uses: docker/login-action@v3
