@@ -16,29 +16,34 @@ jobs:
     - name: Checkout del código
       uses: actions/checkout@v3
 
-    - name: Login a DockerHub
+    # Login en GitHub Container Registry (GHCR)
+    - name: Login GHCR
       uses: docker/login-action@v3
       with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    # Login en DockerHub
+    - name: Login DockerHub
+      uses: docker/login-action@v3
+      with:
+        registry: docker.io
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build y Push a DockerHub
+    - name: Build y push a GHCR y DockerHub
       run: |
-        docker build -t pepebotella911/app:${{ github.run_number }} .
-        docker push pepebotella911/app:${{ github.run_number }}
+        docker build -t ghcr.io/williamtz/app:latest -t docker.io/pepebotella911/app:latest .
+        docker push ghcr.io/williamtz/app:latest
+        docker push docker.io/pepebotella911/app:latest
 
     - name: Escaneo con Docker Scout
       uses: docker/scout-action@v1
       with:
-        image: pepebotella911/app:${{ github.run_number }}
+        image: docker.io/pepebotella911/app:latest
         token: ${{ secrets.DOCKERHUB_TOKEN }}
         command: cves
 
-    - name: Push de imagen parchada
-      if: success()
-      run: |
-        docker build -t pepebotella911/app:v${{ github.run_number }}-secure .
-        docker push pepebotella911/app:v${{ github.run_number }}-secure
-
     - name: Mostrar tipo de mantenimiento
-      run: echo "Mantenimiento tipo:${{ github.event.inputs.tipo }}"
+      run: echo "Mantenimiento tipo: ${{ github.event.inputs.tipo }}"
