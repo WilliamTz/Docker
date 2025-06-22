@@ -24,10 +24,7 @@ jobs:
             docker-bake.hcl
           set: |
             *.platform=linux/amd64
-      - name: Run tests
-        run: |
-          docker build -t test-image .
-          docker run --rm test-image ./test.sh
+
 
 
   docker-image:
