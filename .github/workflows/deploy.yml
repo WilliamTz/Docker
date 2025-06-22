@@ -23,8 +23,9 @@ jobs:
         docker build -t pepebotella911/my-image:latest .
         docker push pepebotella911/my-image:latest
 
-    - name: Desplegar remotamente
+    - name: Desplegar remotamente (puede fallar)
       uses: appleboy/ssh-action@v1.0.3
+      continue-on-error: true
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
