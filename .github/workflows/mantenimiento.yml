@@ -27,5 +27,18 @@ jobs:
         docker build -t pepebotella911/app:${{ github.run_number }} .
         docker push pepebotella911/app:${{ github.run_number }}
 
+    - name: Escaneo con Docker Scout
+      uses: docker/scout-action@v1
+      with:
+        image: pepebotella911/app:${{ github.run_number }}
+        token: ${{ secrets.DOCKERHUB_TOKEN }}
+        command: cves
+
+    - name: Push de imagen parchada
+      if: success()
+      run: |
+        docker build -t pepebotella911/app:v${{ github.run_number }}-secure .
+        docker push pepebotella911/app:v${{ github.run_number }}-secure
+
     - name: Mostrar tipo de mantenimiento
       run: echo "Mantenimiento tipo:${{ github.event.inputs.tipo }}"
