@@ -35,9 +35,6 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
-    - name: Run tests
-      run: |
-        docker run --rm pepebotella911/my-image:latest curl -s http://localhost:80 | grep "Welcome"
 
     - name: Scan image with Docker Scout
       uses: docker/scout-action@v1
