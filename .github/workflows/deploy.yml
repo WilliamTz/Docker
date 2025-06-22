@@ -1,0 +1,36 @@
+name: CI/CD simple
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Login a DockerHub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build y push
+      run: |
+        docker build -t pepebotella911/my-image:latest .
+        docker push pepebotella911/my-image:latest
+
+    - name: Desplegar remotamente
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          docker pull pepebotella911/my-image:latest
+          docker stop app || true
+          docker rm app || true
+          docker run -d --name app -p 80:80 pepebotella911/my-image:latest
